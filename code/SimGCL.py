@@ -28,7 +28,7 @@ if world.config['dataset'] == 'amazon-book':
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
         'ssl_tmp':0.2,#TEMPERATURE
-        'ssl_decay':0.5,#SSL_STRENGTH
+        'ssl_decay':2,#SSL_STRENGTH
         'aug_ratio':0.1,#NOISE_RATIO
     }
 if world.config['dataset'] == 'gowalla':
@@ -39,8 +39,8 @@ if world.config['dataset'] == 'gowalla':
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
         'ssl_tmp':0.2,#TEMPERATURE
-        'ssl_decay':0.1,#SSL_STRENGTH
-        'aug_ratio':0.1,#NOISE_RATIO
+        'ssl_decay':0.05,#SSL_STRENGTH
+        'aug_ratio':0.2,#NOISE_RATIO
     }
 
 

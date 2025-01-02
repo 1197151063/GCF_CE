@@ -6,7 +6,6 @@ import world
 import utils
 import multiprocessing
 import model
-from model import LightGCN
 device = world.device
 config = world.config
 CORES = multiprocessing.cpu_count() // 2
@@ -14,7 +13,7 @@ CORES = multiprocessing.cpu_count() // 2
 define evaluation metrics here
 Already implemented:[Recall@K,NDCG@K]
 """
-def train_bpr(dataset,model:LightGCN,opt):
+def train_bpr(dataset,model,opt):
     model = model
     model.train()
     S = utils.Fast_Sampling(dataset=dataset)
