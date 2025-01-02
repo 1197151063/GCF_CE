@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 if world.config['dataset'] == 'yelp2018':
     config = {
-        'K':1,#GCN_LAYER
+        'K':3,#GCN_LAYER
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
@@ -20,7 +20,7 @@ if world.config['dataset'] == 'yelp2018':
     }
 if world.config['dataset'] == 'amazon-book':
     config = {
-        'K':1,#GCN_LAYER
+        'K':3,#GCN_LAYER
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
@@ -30,7 +30,7 @@ if world.config['dataset'] == 'amazon-book':
     }
 if world.config['dataset'] == 'gowalla':
     config = {
-        'K':1,#GCN_LAYER
+        'K':3,#GCN_LAYER
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
@@ -100,6 +100,16 @@ class DirectAU(RecModel):
         x = F.normalize(x, dim=-1)
         return torch.pdist(x, p=2).pow(2).mul(-t).exp().mean().log()
     
+    def L2_reg(self,edge_label_index):
+        u_idx,i_idx_pos,i_idx_neg = edge_label_index
+        userEmb0 = self.user_emb.weight[u_idx]
+        posEmb0 = self.item_emb.weight[i_idx_pos]
+        negEmb0 = self.item_emb.weight[i_idx_neg]
+        reg_loss = (1/2)*(userEmb0.norm(2).pow(2) + posEmb0.norm(2).pow(2) +
+                         negEmb0.norm(2).pow(2)) / edge_label_index.size(1)
+        regularization = self.config['decay'] * reg_loss
+        return regularization
+    
 def train_dau(dataset,
                   model:DirectAU,
                   opt):
@@ -111,7 +121,8 @@ def train_dau(dataset,
     for edge_label_index in S:
         align = model.alignment_loss(edge_label_index)
         uniform = model.uniformity_loss(edge_label_index)
-        loss = align + uniform
+        L2_reg = model.L2_reg(edge_label_index)
+        loss = align + uniform + L2_reg
         opt.zero_grad()
         loss.backward()
         opt.step()    
