@@ -86,26 +86,26 @@ def train_bpr_sgl(dataset,
     return f"average loss {aver_loss:5f}"
 
 
-# def train_bpr_simgcl(dataset,
-#                   model:SimGCL,
-#                   opt):
-#     model = model
-#     model.train()
-#     S = utils.Fast_Sampling(dataset=dataset)
-#     aver_loss = 0.
-#     total_batch = len(S)
-#     for edge_label_index in S:
-#         pos_rank,neg_rank = model(edge_label_index)
-#         bpr_loss = model.bpr_loss(pos_rank,neg_rank)
-#         ssl_loss = model.ssl_loss(edge_label_index)
-#         L2_reg = model.L2_reg(edge_label_index)
-#         loss = bpr_loss + ssl_loss + L2_reg
-#         opt.zero_grad()
-#         loss.backward()
-#         opt.step()    
-#         aver_loss += (bpr_loss + ssl_loss + L2_reg)
-#     aver_loss /= total_batch
-#     return f"average loss {aver_loss:5f}"
+def train_bpr_simgcl(dataset,
+                  model,
+                  opt):
+    model = model
+    model.train()
+    S = utils.Fast_Sampling(dataset=dataset)
+    aver_loss = 0.
+    total_batch = len(S)
+    for edge_label_index in S:
+        pos_rank,neg_rank = model(edge_label_index)
+        bpr_loss = model.bpr_loss(pos_rank,neg_rank)
+        ssl_loss = model.ssl_loss(edge_label_index)
+        L2_reg = model.L2_reg(edge_label_index)
+        loss = bpr_loss + ssl_loss + L2_reg
+        opt.zero_grad()
+        loss.backward()
+        opt.step()    
+        aver_loss += (bpr_loss + ssl_loss + L2_reg)
+    aver_loss /= total_batch
+    return f"average loss {aver_loss:5f}"
 
 
 @torch.no_grad()

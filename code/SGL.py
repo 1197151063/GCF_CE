@@ -40,8 +40,8 @@ if world.config['dataset'] == 'gowalla':
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
         'ssl_tmp':0.2,#TEMPERATURE
-        'ssl_decay':0.1,#SSL_STRENGTH
-        'drop_ratio':0.1,#EDGE_DROP_RATIO
+        'ssl_decay':0.05,#SSL_STRENGTH
+        'drop_ratio':0.2,#EDGE_DROP_RATIO
     }
 
 class SGL(RecModel):
