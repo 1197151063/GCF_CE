@@ -88,10 +88,12 @@ class SGL(RecModel):
         x_u=self.user_emb.weight
         x_i=self.item_emb.weight
         x=torch.cat([x_u,x_i])
-        out = x * self.alpha[0]
+        out = []
         for i in range(self.K):
             x = self.propagate(edge_index=self.edge_index,x=x)
-            out = out + x * self.alpha[i + 1]
+            out.append(x)
+        out = torch.stack(out,dim=1)
+        out = torch.mean(out,dim=1)
         return out
     
     def item_alignment(self,items):
