@@ -11,33 +11,35 @@ device = world.device
 path='../data/' + world.config['dataset']
 if world.config['dataset'] == 'yelp2018':
     config = {
-        'init_weight':1e-4,
-        'K':3,#GCN_LAYER
-        'dim':64,#EMBEDDING_SIZE
-        'decay':1e-4,#L2_NORM
-        'lr':1e-3,#LEARNING_RATE
-        'seed':0,#RANDOM_SEED
-        'alpha':1e-1,#CONSTRAINT_LOSS
-    }
-
-if world.config['dataset'] == 'amazon-book':
-    config = {
         'init_weight':1e-2,
         'K':3,#GCN_LAYER
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
+        'alpha':1e-3,#CONSTRAINT_LOSS
+    }
+
+if world.config['dataset'] == 'amazon-book':
+    config = {
+        'init_weight':1e-4,
+        'K':2,#GCN_LAYER
+        'dim':64,#EMBEDDING_SIZE
+        'decay':1e-4,#L2_NORM
+        'lr':1e-3,#LEARNING_RATE
+        'seed':0,#RANDOM_SEED
+        'alpha':1,#CONSTRAINT_LOSS
     }
 
 if world.config['dataset'] == 'gowalla':
     config = {
         'init_weight':1e-2,
-        'K':3,#GCN_LAYER
+        'K':4,#GCN_LAYER
         'dim':64,#EMBEDDING_SIZE
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
+        'alpha':1e-3,#CONSTRAINT_LOSS
     }
 
 class LightGCN(RecModel):
@@ -107,6 +109,18 @@ class LightGCN(RecModel):
             out = out + x * self.alpha[i + 1]
         return out
     
+    def get_embedding_wo_first(self):
+        x_u=self.user_emb.weight
+        x_i=self.item_emb.weight
+        x=torch.cat([x_u,x_i])
+        out = []
+        for i in range(self.K):
+            x = self.propagate(edge_index=self.edge_index,x=x)
+            out.append(x)
+        out = torch.stack(out,dim=1)
+        out = torch.mean(out,dim=1)
+        return out
+
     def item_alignment(self,items):
         item_emb = self.item_emb.weight
         knn_neighbour = self.knn_ind[items] #[batch_size * k]

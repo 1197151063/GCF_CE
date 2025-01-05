@@ -25,7 +25,7 @@ if world.config['dataset'] == 'amazon-book':
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
-        'gamma':1,#UNIFORMITY
+        'gamma':5,#UNIFORMITY
 
     }
 if world.config['dataset'] == 'gowalla':

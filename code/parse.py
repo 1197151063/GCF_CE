@@ -3,7 +3,7 @@ import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Go RecModel")
-    parser.add_argument('--bpr_batch', type=int, default=2048,
+    parser.add_argument('--bpr_batch', type=int, default=1024,
                         help="the batch size for bpr loss training procedure")  # 512 1024 2048 4096
     parser.add_argument('--layer', type=int, default=3,
                         help="the layer num of lightGCN")

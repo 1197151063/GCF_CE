@@ -89,6 +89,6 @@ for epoch in range(1, 1001):
     flag,best,patience = utils.early_stopping(recall[20],ndcg[20],best,patience,model)
     if flag == 1:
         break
-    print(f'Epoch: {epoch:03d}, {loss:.4f}, R@20: '
+    print(f'Epoch: {epoch:03d}, {loss}, R@20: '
           f'{recall[20]:.4f}, R@50: {recall[50]:.4f} '
           f', N@20: {ndcg[20]:.4f}, N@50: {ndcg[50]:.4f}')
