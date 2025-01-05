@@ -35,7 +35,7 @@ if world.config['dataset'] == 'gowalla':
         'decay':1e-4,#L2_NORM
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
-        'gamma':1,#UNIFORMITY
+        'gamma':0.8,#UNIFORMITY
     }
 class DirectAU(RecModel):
     def __init__(self,

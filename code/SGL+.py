@@ -18,7 +18,7 @@ if world.config['dataset'] == 'yelp2018':
         'lr':1e-3,#LEARNING_RATE
         'seed':0,#RANDOM_SEED
         'ssl_tmp':0.2,#TEMPERATURE
-        'ssl_decay':0.1,#SSL_STRENGTH
+        'ssl_decay':0.5,#SSL_STRENGTH
         'drop_ratio':0.1,#EDGE_DROP_RATIO
         'alpha':1e-1,
     }
@@ -121,10 +121,12 @@ class SGL(RecModel):
         x_u=self.user_emb.weight
         x_i=self.item_emb.weight
         x=torch.cat([x_u,x_i])
-        out = x * self.alpha[0]
+        out = []
         for i in range(self.K):
             x = self.propagate(edge_index=edge_index,x=x)
-            out = out + x * self.alpha[i + 1]
+            out.append(x)
+        out = torch.stack(out,dim=1)
+        out = torch.mean(out,dim=1)
         return out
 
     def ssl_loss(self,
